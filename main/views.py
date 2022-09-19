@@ -37,3 +37,31 @@ class DeleteRoomView(View):
         room = ConferenceRoom.objects.get(pk=room_id)
         room.delete()
         return redirect('room-list')
+
+class ModifyRoomView(View):
+    def get(self, request, room_id):
+        room = ConferenceRoom.objects.get(pk=room_id)
+        return render(request, 'modify_room.html', context={'room': room})
+
+    def post(self, request, room_id):
+        room = ConferenceRoom.objects.get(pk=room_id)
+        name = request.POST.get('room-name')
+        capacity = request.POST.get('capacity')
+        capacity = int(capacity) if capacity else 0
+        projektor = request.POST.get('projector') == "on"
+
+        if not name:
+            return render(request, 'modify_room.html', context={'room': room,
+                                                                'error': "Nie podano nazwy pokoju"})
+        if capacity <= 0:
+            return render(request, 'modify_room.html', context={'room': room,
+                                                                'error': "Pojemność sali musi być dodatnia"})
+        if name != room.name and ConferenceRoom.objects.filter(name=name).first():
+            return render(request, 'modify_room.html', context={'room': room,
+                                                                'error': "Sala o podanej nazwie już istnieje!"})
+
+        room.name = name
+        room.capacity = capacity
+        room.projector_availability = projektor
+        room.save()
+        return redirect("room-list")
