@@ -87,3 +87,9 @@ class ReservationViev(View):
         RoomReservation.objects.create(room_id=room, date=date, comment=comment)
         return redirect('room-list')
 
+class RoomDetailsView(View):
+    def get(self, request, room_id):
+        room = ConferenceRoom.objects.get(pk=room_id)
+        reservations = room.roomreservation_set.filter(date__gte=str(datetime.date.today())).order_by('date')
+        return render(request, 'room.html', context={'room': room,
+                                                     'reservations': reservations})
