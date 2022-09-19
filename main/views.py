@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.views import View
 
-from main.models import ConferenceRoom
+from main.models import ConferenceRoom, RoomReservation
 
+import datetime
 
 # Create your views here.
 
@@ -65,3 +66,24 @@ class ModifyRoomView(View):
         room.projector_availability = projektor
         room.save()
         return redirect("room-list")
+
+class ReservationViev(View):
+    def get(self, request, room_id):
+        room = ConferenceRoom.objects.get(pk=room_id)
+        return render(request, 'reservation.html', context={'room': room})
+
+    def post(self, request, room_id):
+        room = ConferenceRoom.objects.get(pk=room_id)
+        date = request.POST.get('reservation-date')
+        comment = request.POST.get('comment')
+
+        if RoomReservation.objects.filter(room_id=room, date=date):
+            return render(request, 'reservation.html', context={'room': room,
+                                                                'error': "Sala jest już zarezerwowana!"})
+
+        if date < str(datetime.date.today()):
+            return render(request, 'reservation.html', context={'room': room,
+                                                                'error': "Niepoprawna data!"})
+        RoomReservation.objects.create(room_id=room, date=date, comment=comment)
+        return redirect('room-list')
+
