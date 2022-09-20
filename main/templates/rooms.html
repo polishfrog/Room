@@ -73,6 +73,30 @@
 </table>
 <!-- Table -->
 
+<!-- Form -->
+<h3>Wyszukiewanie</h3>
+<div class="card">
+    <div class="card-body">
+        <form action="/search" method="get">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="room-name">Nazwa sali</label>
+                <input type="text" class="form-control" id="room-name" aria-describedby="room-name-help" placeholder="Nazwa sali" name="room-name">
+            </div>
+            <div class="form-group">
+                <label for="capacity">Minimalna pojemność sali</label>
+                <input type="number" step="1" class="form-control" id="capacity" name="capacity" placeholder="10">
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" name="projector" id="projektor">
+                <label class="form-check-label" for="projektor">Dostępność rzutnika</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Szukaj</button>
+        </form>
+    </div>
+</div>
+<!-- Form -->
+
 <!-- Footer -->
 <footer class="footer">
     <div class="container">
