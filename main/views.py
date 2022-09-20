@@ -31,6 +31,9 @@ class AddRoomView(View):
 class RoomListView(View):
     def get(self, request):
         rooms = ConferenceRoom.objects.all()
+        for room in rooms:
+            reservation_dates = [reservation.date for reservation in room.roomreservation_set.all()]
+            room.reserved = datetime.date.today() in reservation_dates
         return render(request, 'rooms.html', context={'rooms': rooms})
 
 class DeleteRoomView(View):

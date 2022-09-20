@@ -33,7 +33,8 @@
             <th scope="col" class="col-1">#</th>
             <th scope="col" class="col-2">Nazwa</th>
             <th scope="col" class="col-1">Pojemność</th>
-            <th scope="col" class="col-5" colspan="4">Dostępność rzutnika</th>
+            <th scope="col" class="col-1">Rezerwacje</th>
+            <th scope="col" class="col-5" colspan="5"> Dostępność rzutnika</th>
         </tr>
     </thead>
     <tbody>
@@ -44,6 +45,12 @@
             <a href="/room/{{ room.id }}/">{{ room.name }}</a>
         </td>
         <td class="col-1">{{ room.capacity }}</td>
+        {% if room.reserved %}
+            <td class="col-2" style="color: red;">Zarezerwowana</td>
+        {% else %}
+            <td class="col-2" style="color: green;">Dostępna</td>
+        {% endif %}
+
         {% if room.projector_availability %}
             <td class="col-2" style="color: green;">&#9745;</td>
         {% else %}
